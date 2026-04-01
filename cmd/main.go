@@ -2,25 +2,40 @@ package main
 
 import (
 	"context"
-	"io"
+	"database/sql"
 	"log"
 	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
 	"time"
+
+	"github.com/ahmed-cmyk/drawsync/internal/handlers"
+	_ "github.com/mattn/go-sqlite3"
 )
 
 func main() {
+	// Setup DB
+	db, err := sql.Open("sqlite3", "./data.db")
+	if err != nil {
+		log.Printf("Failed to initialize driver: %v", err)
+	}
+	defer db.Close()
+
+	// Actually verify connection
+	if err := db.Ping(); err != nil {
+		log.Fatalf("Could not connect to DB: %v", err)
+	}
+
 	mux := http.NewServeMux()
 	port := ":8080"
 
 	sigs := make(chan os.Signal, 1)
 	signal.Notify(sigs, os.Interrupt, syscall.SIGTERM)
 
-	mux.HandleFunc("/hello", func(w http.ResponseWriter, r *http.Request) {
-		io.WriteString(w, "Hello, World!\n")
-	})
+	h := handlers.New()
+
+	mux.HandleFunc("/room/{name}", h.CreateRoom)
 
 	srv := &http.Server{
 		Addr:         port,
