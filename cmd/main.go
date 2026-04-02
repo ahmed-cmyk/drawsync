@@ -38,6 +38,7 @@ func main() {
 	port := ":8080"
 
 	mux.HandleFunc("/room/{name}", h.CreateRoom)
+	mux.HandleFunc("/ws", h.UpgradeConnection)
 
 	srv := &http.Server{
 		Addr:         port,
