@@ -37,6 +37,10 @@ func main() {
 	mux := http.NewServeMux()
 	port := ":8080"
 
+	fs := http.FileServer(http.Dir("./ui"))
+
+	mux.Handle("/", fs)
+
 	mux.HandleFunc("/room/{name}", h.CreateRoom)
 	mux.HandleFunc("/ws", h.UpgradeConnection)
 
