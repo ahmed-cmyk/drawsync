@@ -1,17 +1,34 @@
-function draw() {
-  const canvas = document.getElementById("drawing-board");
+const canvas = document.getElementById("drawing-board");
 
+function draw(x, y) {
   if (canvas.getContext) {
     const ctx = canvas.getContext("2d");
 
-    ctx.fillStyle = "rgb(200 0 0)";
-    ctx.fillRect(10, 10, 50, 50);
-
-    ctx.fillStyle = "rgb(0 0 200 / 50%)";
-    ctx.fillRect(30, 30, 50, 50);
+    ctx.fillStyle = "#f00";
+    ctx.fillRect(x, y, 10, 10);
   } else {
     console.error("Your browser doesn't support the canvas element");
   }
 }
 
-draw();
+function checkCoordinates(e) {
+  const x = e.offsetX;
+  const y = e.offsetY;
+
+  console.log(`X: ${x}, Y: ${y}`);
+
+  draw(x, y);
+}
+
+function resizeCanvas() {
+  console.log("inner height", window.innerHeight);
+  console.log("inner width", window.innerWidth);
+
+  canvas.height = window.innerHeight * 0.9;
+  canvas.width = window.innerWidth * 0.7;
+}
+
+resizeCanvas();
+
+window.addEventListener("resize", resizeCanvas);
+canvas.addEventListener("mousedown", checkCoordinates);

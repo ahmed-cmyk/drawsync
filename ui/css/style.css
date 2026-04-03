@@ -81,6 +81,7 @@ body {
 
 #drawing-board {
     border: 1px solid white;
+    display: block;
     margin: 0 auto;
-    width: 90%;
+    image-rendering: pixelated;
 }
