@@ -1,23 +1,24 @@
 const canvas = document.getElementById("drawing-board");
+let isDrawing = false;
 
-function draw(x, y) {
-  if (canvas.getContext) {
-    const ctx = canvas.getContext("2d");
+canvas.addEventListener("mousedown", () => (isDrawing = true));
+canvas.addEventListener("mouseup", () => (isDrawing = false));
+canvas.addEventListener("mouseout", () => (isDrawing = false));
+canvas.addEventListener("mousemove", draw);
 
-    ctx.fillStyle = "#f00";
-    ctx.fillRect(x, y, 10, 10);
-  } else {
-    console.error("Your browser doesn't support the canvas element");
-  }
-}
+function draw(e) {
+  if (!isDrawing) return;
 
-function checkCoordinates(e) {
-  const x = e.offsetX;
-  const y = e.offsetY;
+  const ctx = canvas.getContext("2d");
 
-  console.log(`X: ${x}, Y: ${y}`);
+  ctx.lineWidth = 5;
+  ctx.lineCap = "round";
+  ctx.strokeStyle = "#f00";
 
-  draw(x, y);
+  ctx.lineTo(e.offsetX, e.offsetY);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(e.offsetX, e.offsetY);
 }
 
 function resizeCanvas() {
@@ -31,4 +32,3 @@ function resizeCanvas() {
 resizeCanvas();
 
 window.addEventListener("resize", resizeCanvas);
-canvas.addEventListener("mousedown", checkCoordinates);
