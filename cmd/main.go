@@ -44,6 +44,11 @@ func main() {
 	mux.HandleFunc("/room/{name}", h.CreateRoom)
 	mux.HandleFunc("/ws", h.UpgradeConnection)
 
+	// Confirm existence of index.html file relative to execution path
+	if _, err := os.Stat("./ui/index.html"); os.IsNotExist(err) {
+		log.Fatalln("Warning: ./ui/index.html not found relative to execution directory!")
+	}
+
 	srv := &http.Server{
 		Addr:         port,
 		WriteTimeout: time.Second * 30,

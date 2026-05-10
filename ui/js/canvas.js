@@ -1,4 +1,6 @@
 const canvas = document.getElementById("drawing-board");
+const ctx = canvas.getContext("2d");
+
 let isDrawing = false;
 
 canvas.addEventListener("mousedown", () => (isDrawing = true));
@@ -9,8 +11,6 @@ canvas.addEventListener("mousemove", draw);
 function draw(e) {
   if (!isDrawing) return;
 
-  const ctx = canvas.getContext("2d");
-
   ctx.lineWidth = 5;
   ctx.lineCap = "round";
   ctx.strokeStyle = "#f00";
@@ -19,6 +19,11 @@ function draw(e) {
   ctx.stroke();
   ctx.beginPath();
   ctx.moveTo(e.offsetX, e.offsetY);
+
+  const normX = e.offsetX / canvas.width;
+  const normY = e.offsetY / canvas.height;
+
+  console.log(`norm coordinates: X: ${normX}, Y:${normY}`);
 }
 
 function resizeCanvas() {
